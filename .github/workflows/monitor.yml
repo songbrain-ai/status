@@ -1,0 +1,33 @@
+name: Uptime monitor
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: monitor
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Check endpoints
+        run: python monitor.py
+      - name: Commit results
+        run: |
+          git config user.name "Songbrain Status"
+          git config user.email "hello@songbrain.ai"
+          git add history summary.json incidents.json
+          git diff --cached --quiet && exit 0
+          git commit -q -m "status: $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done
