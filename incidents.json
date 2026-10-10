@@ -2,11 +2,11 @@
  "open": {},
  "last": {
   "api": "operational",
-  "pipeline": "operational",
+  "pipeline": "degraded",
   "webhooks": "operational",
   "website": "operational",
   "console": "operational"
  },
  "list": [],
- "last_at": "2026-10-10T18:51:32Z"
+ "last_at": "2026-10-10T22:02:36Z"
 }
